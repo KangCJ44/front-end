@@ -1,0 +1,90 @@
+.InterviewAibody{
+    width: 1440px;
+    background: #fff;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 40px;
+    display: flex;
+    margin: 0 auto;
+    cursor: default;
+}
+
+.AiSubtitleBox{
+    padding: 10px 30px;
+    left: 403px;
+    top: 138px;
+    position: absolute;
+    border-radius: 10px;
+    border: 1px #4285F4 solid;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    display: inline-flex;
+}
+
+.AiSubtitleText{
+    color: #4285F4;
+    font-size: 18px;
+    font-family: Heebo;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.AiSelectFrame{
+    left: 403px;
+    top: 224px;
+    position: absolute;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 40px;
+    display: inline-flex;
+}
+
+.AiJobSelectFrame{
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: flex;
+}
+
+.JobSelectTitle{
+    color: #808080;
+    font-size: 16;
+    font-family: Noto Sans KR;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.IncludeButton{
+    padding: 12px;
+    background: #4285F4;
+    border-radius: 5px;
+    overflow: hidden;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    display: inline-flex;
+    border: none;
+}
+.IncludeButton:hover{
+    cursor: pointer;
+    background: var(--button-hover-bg-color, #025ce2);
+}
+
+.OutputButton{
+    padding: 13px 50px;
+    background: #4285F4;
+    border-radius: 5px;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    border: none;
+}
+
+.OutputButton:hover{
+    cursor: pointer;
+    background: var(--button-hover-bg-color, #025ce2);
+}
