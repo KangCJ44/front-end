@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Select from "react-select";
 import Header from "../components/header.js"
 import { useNavigate } from "react-router-dom";
@@ -6,11 +6,11 @@ import "../style/interviewai.css"
 import { Octokit } from "octokit";
 
 const joboption=[
-    {value: "01", label: "서버 개발자"},
-    {value: "02", label: "프론트엔드 개발자"},
-    {value: "03", label: "안드로이드 개발자"},
-    {value: "04", label: "iOS 개발자"},
-    {value: "05", label: "임베디드 개발자"}
+    {value: "01", label: "프론트엔드 개발"},
+    {value: "02", label: "백엔드 개발"},
+    {value: "03", label: "풀스택 개발"},
+    {value: "04", label: "AI 개발"},
+    {value: "05", label: "게임 개발"},
 ];
 
 function InterviewAi(){
@@ -46,7 +46,69 @@ function InterviewAi(){
   const navigate = useNavigate();
   const navigateToOutput = () => {
     navigate("/interviewai/output")
+  };
+
+  const [AiSelection, setSelectJobOption] = useState(null);
+  const Jobhandler = (AiSelection) => {
+    setSelectJobOption(AiSelection);
+    console.log(AiSelection);
+  };
+
+  const [repos, setRepos] = useState([]);
+  const [isRepoModalOpen, setIsRepoModalOpen] = useState(false);
+  const [selectedRepos, setSelectedRepos] = useState([]);
+
+  const fetchRepos = async () => {
+    try{
+      const response = await octokit.request('GET /user/repos');
+      setRepos(response.data);
+      setIsRepoModalOpen(true);
+    }
+    catch(error){
+      console.error('Error fetching repositories:', error);
+    }
+  };
+
+  const handleIncludeButtonClick = () => {
+    fetchRepos();
   }
+
+  const renderRepoModal = () => {
+    if(!isRepoModalOpen) return null;
+
+    return(
+      <div className="modalOverlay">
+        <div className="modalContent">
+          <div className="modalHeader">
+            <h2>저장소 선택</h2>
+            <button onClick={() => setIsRepoModalOpen(false)}>닫기</button>
+          </div>
+          <div className="modalBody">
+            {repos.map(repo => (
+              <div key={repo.id} className="modalItem" onClick={() => selectRepo(repo)}>
+                {repo.full_name}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const selectRepo = (repo) => {
+    setSelectedRepos(prevRepos => [...prevRepos, repo]);
+    console.log("Selected repo:", repo.name);
+    setIsRepoModalOpen(false);
+  };
+
+  const renderPopolList = () => {
+    return selectedRepos.map((repo, index) => (
+      <div className="PopolItem" key={index}>
+        <div className="RepositoryName">{repo.full_name}</div>
+      </div>
+    ));
+  };
+
   return(
       <div className="InterviewAibody">
           <Header/>
@@ -64,21 +126,20 @@ function InterviewAi(){
                   options={joboption}
                   isSearchable={false}
                   styles={JobcustomSelect}
+                  onChange={Jobhandler}
               />
+            </div>
+            {renderRepoModal()}
+            <div className="PopolIncludeList">
+              <div className="PopolList">
+                {renderPopolList()}
               </div>
-              <div style={{width: 229, height: 158, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 25, display: 'inline-flex'}}>
-                <div className="Frame77" style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', display: 'flex'}}>
-                  <div className="1" style={{width: 129, height: 38, color: '#808080', fontSize: 16, fontFamily: 'Noto Sans KR', fontWeight: '700', wordWrap: 'break-word'}}>포트폴리오 1</div>
-                  <div className="Frame76" style={{paddingTop: 11, paddingBottom: 2, paddingLeft: 18, paddingRight: 66, borderRadius: 5, border: '1px #DDDDDD solid', justifyContent: 'flex-start', alignItems: 'center', display: 'inline-flex'}}>
-                    <div className="SermadlChaezzic" style={{width: 145, height: 35, color: 'black', fontSize: 16, fontFamily: 'Noto Sans KR', fontWeight: '500', wordWrap: 'break-word'}}>Sermadl/chaezzic</div>
-                  </div>
-                </div>
-                <button className="IncludeButton" onClick={()=>window.open()}>
-                  <div style={{color: '#FCFDFF', fontSize: 16, fontFamily: 'Noto Sans KR', fontWeight: '500', wordWrap: 'break-word'}}>+ 포트폴리오 추가하기</div>
-                </button>
-              </div>
+              <button className="IncludeButton" onClick={handleIncludeButtonClick}>
+                <div className="ButtonTypo">+ 포트폴리오 추가하기</div>
+              </button>
+            </div>
             <button className="OutputButton" onClick={navigateToOutput}>
-              <div style={{color: 'white', fontSize: 16, fontFamily: 'Noto Sans KR', fontWeight: '700', wordWrap: 'break-word'}}>제출하기</div>
+              <div className="ButtonTypo">제출하기</div>
             </button>
           </div>
       </div>
